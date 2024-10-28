@@ -51,13 +51,38 @@ app.get('/posts', (req, res) => {
 app.put('/posts/:id', (req, res) => {
   const { id } = req.params;
   const { title, body, archived } = req.body;
-  const sql = 'UPDATE notes SET title = ?, body = ?, archived = ? WHERE id = ?';
-  db.run(sql, [title, body, archived, id], function(err) {
+
+  const updates = [];
+  const sqlParams = [];
+
+  if (title !== undefined) {
+    updates.push('title = ?');
+    sqlParams.push(title);
+  }
+  if (body !== undefined) {
+    updates.push('body = ?');
+    sqlParams.push(body);
+  }
+  if (archived !== undefined) {
+    updates.push('archived = ?');
+    sqlParams.push(archived);
+  }
+
+  if (updates.length === 0) {
+    return res.status(400).json({ message: 'No fields to update' });
+  }
+
+  sqlParams.push(id);
+
+  const sql = `UPDATE notes SET ${updates.join(', ')} WHERE id = ?`;
+
+  db.run(sql, sqlParams, function(err) {
     if (err) return res.status(500).send(err.message);
     if (this.changes === 0) return res.status(404).json({ message: 'Post not found' });
     res.json({ message: 'Post updated successfully' });
   });
 });
+
 
 // Delete a post
 app.delete('/posts/:id', (req, res) => {
