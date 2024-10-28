@@ -25,7 +25,7 @@ db.connect((err) => {
   console.log('Connected to database.');
 });
 
-app.post('/posts', (req, res) => {
+app.post('/notes', (req, res) => {
     const { title, body, archived } = req.body;
     const sql = 'INSERT INTO notes (title, body, archived) VALUES (?, ?, ?)';
     db.query(sql, [title, body, archived || false], (err, result) => {
@@ -34,7 +34,7 @@ app.post('/posts', (req, res) => {
     });
   });
   
-  app.get('/posts', (req, res) => {
+  app.get('/notes', (req, res) => {
     const sql = 'SELECT * FROM notes';
     db.query(sql, (err, results) => {
       if (err) return res.status(500).send(err);
@@ -43,7 +43,7 @@ app.post('/posts', (req, res) => {
   });
   
   // Update a post
-  app.put('/posts/:id', (req, res) => {
+  app.put('/notes/:id', (req, res) => {
     const { id } = req.params;
     const { title, body, archived } = req.body;
 
@@ -78,9 +78,9 @@ app.post('/posts', (req, res) => {
     });
   });
   
-  app.delete('/posts/:id', (req, res) => {
+  app.delete('/notes/:id', (req, res) => {
     const { id } = req.params;
-    const sql = 'DELETE FROM posts WHERE id = ?';
+    const sql = 'DELETE FROM notes WHERE id = ?';
     db.query(sql, [id], (err, result) => {
       if (err) return res.status(500).send(err);
       if (result.affectedRows === 0) return res.status(404).json({ message: 'Post not found' });
