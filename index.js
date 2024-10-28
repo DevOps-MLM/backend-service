@@ -10,7 +10,6 @@ app.use(cors());
 app.use(bodyParser.json());
 const PORT = 3000;
 
-// Connect to SQLite database (it will create the file if it doesn't exist)
 const db = new sqlite3.Database(path.resolve(__dirname, 'database.db'), (err) => {
   if (err) {
     console.error('Database connection failed:', err.message);
