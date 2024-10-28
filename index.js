@@ -25,6 +25,7 @@ db.run(`CREATE TABLE IF NOT EXISTS notes (
   title TEXT NOT NULL,
   body TEXT NOT NULL,
   archived BOOLEAN NOT NULL DEFAULT 0
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )`);
 
 // Create a post
