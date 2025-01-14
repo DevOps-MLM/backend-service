@@ -1,23 +1,26 @@
-name: Build and Push Docker Image to Docker Hub
-
-on: push
+name: Build Docker Image
+on:
+  push:
+    branches:
+      - main
 jobs:
-  push_to_registry:
-    name: push docker image to hub
-    runs-on: ubuntu-latest
-    steps:
-      - name: check repository
-        uses: actions/checkout@v4
-
-      - name: login to docker registry
-        uses: docker/login-action@v3
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
-
-      - name: build and push docker image to registry
-        uses: docker/build-push-action@v5
-        with:
-          context: DockerFileFolder/
-          push: true
-          tags: fadillahrizki/notes-backend:latest
+    build:
+      name: push docker image to docker hub
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: login to docker hub
+          id: docker-hub
+          env:
+            username: ${{secrets.DOCKERHUB_USERNAME}}
+            password: ${{secrets.DOCKERHUB_TOKEN}}
+          run: |
+            docker login -u $username -p $password 
+        - name: build the docker image
+          id: build-docker-image
+          run: |
+            ls -la 
+            docker build . -f Dockerfile -t fadillahrizki/notes-backend:latest
+        - name: push the docker image
+          id: push-docker-image
+          run: docker push ${{secrets.DOCKERHUB_USERNAME}}/notes-backend:latest
