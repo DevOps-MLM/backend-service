@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: notes-backend
-          image: fadillahrizki/notes-backend:1.0.1
+          image: fadillahrizki/notes-backend:1.0.2
 ---
 apiVersion: v1
 kind: Service
